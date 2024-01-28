@@ -2,11 +2,8 @@ import 'package:my_app/model/Task.dart';
 
 class TaskRepository {
   final List<Task> _taskList = [
-    Task(
-        0,
-        "Study MVVM",
-        "In order to avoid ugly state management librares and collect continuously technical debt, I should study proper state management patterns",
-        false)
+    Task(0, "Study MVVM", false),
+    Task(1, "Study MVVM2", false)
   ];
 
   void addTask(Task task) {

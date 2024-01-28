@@ -3,6 +3,7 @@ import 'package:my_app/model/Task.dart';
 import 'package:my_app/repository/task.dart';
 import 'package:my_app/viewmodel/observer.dart';
 import 'package:my_app/viewmodel/task.dart';
+import 'package:my_app/widgets/form.dart';
 
 class TaskWidget extends StatefulWidget {
   const TaskWidget({super.key});
@@ -23,6 +24,7 @@ class _TaskWidgetState extends State<TaskWidget> implements EventObserver {
   void initState() {
     super.initState();
     _viewModel.subscribe(this);
+    _viewModel.loadTasks();
   }
 
   @override
@@ -34,28 +36,23 @@ class _TaskWidgetState extends State<TaskWidget> implements EventObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("TaskApp 2000"),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _viewModel.loadTasks();
+        body: Column(
+      children: <Widget>[
+        TodoForm(
+          onFormSubmit: (value) {
+            _viewModel.createTask(value);
           },
-          child: const Icon(Icons.refresh),
         ),
-        body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : ListView.builder(
-                itemCount: _tasks.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_tasks[index].title),
-                    subtitle: Text(_tasks[index].description),
-                  );
-                },
-              ));
+        Expanded(
+          child: ListView.builder(
+            itemCount: _tasks.length,
+            itemBuilder: (context, index) {
+              return ListTile(title: Text(_tasks[index].title));
+            },
+          ),
+        )
+      ],
+    ));
   }
 
   @override

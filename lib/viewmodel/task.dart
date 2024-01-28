@@ -16,10 +16,10 @@ class TaskViewModel extends EventViewModel {
     });
   }
 
-  void createTask(String title, String description) {
+  void createTask(String title) {
     notify(LoadingEvent(isLoading: true));
-    // ... code to create the task
-    notify(TaskCreatedEvent(Task(0, title, description, false)));
+    _repository.addTask(Task(0, title, false));
+    notify(TaskCreatedEvent(Task(0, title, false)));
     notify(LoadingEvent(isLoading: false));
   }
 }
