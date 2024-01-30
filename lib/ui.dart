@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/model/Task.dart';
+import 'package:my_app/model/task.dart';
 import 'package:my_app/repository/task.dart';
 import 'package:my_app/viewmodel/observer.dart';
 import 'package:my_app/viewmodel/task.dart';

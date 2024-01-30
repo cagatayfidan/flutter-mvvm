@@ -1,27 +1,26 @@
-import 'package:my_app/model/Task.dart';
+import 'package:my_app/model/task.dart';
+import 'package:my_app/repository/database.dart';
 
 class TaskRepository {
-  final List<Task> _taskList = [
-    Task(0, "Study MVVM", false),
-    Task(1, "Study MVVM2", false)
-  ];
+  IndexedDB _indexedDB = IndexedDB();
 
-  void addTask(Task task) {
-    task.id = _taskList.length;
+  final List<Task> _taskList = [];
+
+  Future<Task> addTask(String title) async {
+    Task task = Task(_taskList.length, title, false);
+    await _indexedDB.writeToDatabase(task.toJson());
     _taskList.add(task);
+    return task;
   }
 
-  void removeTask(Task task) {
+  Future<void> removeTask(Task task) async {
+    await _indexedDB.deleteFromDatabase(task.id);
     _taskList.remove(task);
   }
 
-  void updateTask(Task task) {
-    _taskList[_taskList.indexWhere((element) => element.id == task.id)] = task;
-  }
-
   Future<List<Task>> loadTasks() async {
-    // Simulate a http request
-    await Future.delayed(const Duration(seconds: 2));
-    return Future.value(_taskList);
+    List<Task> records = await _indexedDB.readFromDatabase();
+    _taskList.addAll(records);
+    return _taskList;
   }
 }

@@ -1,4 +1,4 @@
-import 'package:my_app/model/Task.dart';
+import 'package:my_app/model/task.dart';
 import 'package:my_app/repository/task.dart';
 import 'package:my_app/viewmodel/observer.dart';
 import 'package:my_app/viewmodel/viewmodel.dart';
@@ -11,17 +11,32 @@ class TaskViewModel extends EventViewModel {
   void loadTasks() {
     notify(LoadingEvent(isLoading: true));
     _repository.loadTasks().then((value) {
-      notify(TasksLoadedEvent(tasks: value));
+      notify(TasksLoadedEvent(
+          tasks: value
+              .map((task) => Task(task.id, task.title, task.done))
+              .toList()));
       notify(LoadingEvent(isLoading: false));
     });
   }
 
   void createTask(String title) {
     notify(LoadingEvent(isLoading: true));
-    _repository.addTask(Task(0, title, false));
-    notify(TaskCreatedEvent(Task(0, title, false)));
+    _repository.addTask(title).then((value) => notify(TaskCreatedEvent(value)));
     notify(LoadingEvent(isLoading: false));
   }
+
+  void deleteTask(Task task) {
+    notify(LoadingEvent(isLoading: true));
+    _repository.removeTask(task).then((value) => notify(TaskDeletedEvent()));
+    notify(LoadingEvent(isLoading: false));
+  }
+
+  // void updateTask(Task task) {
+  //   notify(LoadingEvent(isLoading: true));
+  //   _repository.updateTask(task).then((value) => notify(TaskDeletedEvent()));
+  //   notify(LoadingEvent(isLoading: false));
+  // }
+  
 }
 
 class LoadingEvent extends ViewEvent {
@@ -41,4 +56,8 @@ class TaskCreatedEvent extends ViewEvent {
   final Task task;
 
   TaskCreatedEvent(this.task) : super("TaskCreatedEvent");
+}
+
+class TaskDeletedEvent extends ViewEvent {
+  TaskDeletedEvent() : super("TaskDeletedEvent");
 }
