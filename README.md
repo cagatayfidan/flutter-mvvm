@@ -1,7 +1,7 @@
 # my_app
 
 * Sample project with MVVM pattern with IndexedDB actions and ChangeNotifier in Flutter.
-
+///
 ## TODO
 
 - [x] Find a proper way to IndexedDB connection.
